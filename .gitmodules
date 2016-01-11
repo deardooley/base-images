@@ -1,0 +1,15 @@
+[submodule "tomcat"]
+	path = tomcat
+	url = https://github.com/jeanblanchard/docker-tomcat
+[submodule "java"]
+	path = java
+	url = https://github.com/jeanblanchard/docker-java
+[submodule "python/2.7"]
+	path = python/2.7
+	url = https://github.com/frol/docker-alpine-python2
+[submodule "python/3"]
+	path = python/3
+	url = https://github.com/frol/docker-alpine-python3
+[submodule "nodejs"]
+	path = nodejs
+	url = https://github.com/mhart/alpine-node
