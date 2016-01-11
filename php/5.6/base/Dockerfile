@@ -1,0 +1,32 @@
+######################################################
+#
+# PHP 5.6 Base Image
+# Tag: deardooley/php:5.6
+#
+# This is a minimal alpine-based php 5.6 image with Apache 2.4.
+#
+######################################################
+
+FROM deardooley/httpd:2.4
+MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
+
+RUN apk --update add curl zip php-apache2 php-cli php-json php-phar php-openssl php-mysql php-pdo php-zip php-curl php-mysqli php-gd php-iconv php-zlib php-opcache ssmtp && \
+    rm -f /var/cache/apk/* && \
+    rm index.html && \
+    echo "<?php phpinfo(); ?>" > /var/www/html/index.php && \
+    ls -al && \
+    chown -R apache:apache /var/www/html && \
+    sed -ri -e 's/^(mailhub=).*/\1%%SMTP_HUB%%/' -e 's/^#(FromLineOverride)/\1/' /etc/ssmtp/ssmtp.conf && \
+    echo "AuthUser=%%SMTP_USER%%" >> /etc/ssmtp/ssmtp.conf && \
+    echo "AuthPass=%%SMTP_PASSWORD%%" >> /etc/ssmtp/ssmtp.conf && \
+    echo "UseSTARTTLS=YES" >> /etc/ssmtp/ssmtp.conf && \
+    { \
+		echo 'opcache.memory_consumption=128'; \
+		echo 'opcache.interned_strings_buffer=8'; \
+		echo 'opcache.max_accelerated_files=4000'; \
+		echo 'opcache.revalidate_freq=60'; \
+		echo 'opcache.fast_shutdown=1'; \
+		echo 'opcache.enable_cli=1'; \
+	} > /etc/php/conf.d/opcache-recommended.ini
+
+ADD php/php.ini /etc/php/php.ini

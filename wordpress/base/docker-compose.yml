@@ -1,0 +1,47 @@
+wordpress:
+  image: deardooley/wordpress:vanilla
+  hostname: docker.example.com
+  environment:
+    MYSQL_DATABASE: wordpress
+    MYSQL_USER: wordpress
+    MYSQL_PASSWORD: changeit
+    MYSQL_HOST: mysql
+    SMTP_HUB: "smtp.sendgrid.net:587"
+    SMTP_USER: username
+    SMTP_PASSWORD: password
+    SMTP_FROM_ADDRESS: "admin@example.com"
+    SMTP_TLS: 1
+    INSTALL_DB: 1
+    ADMIN_EMAIL: "admin@example.com"
+    ADMIN_USER: admin
+    ADMIN_PASSWORD: admin
+    SITE_URL: docker.example.com
+    SITE_TITLE: 'Another Wordpress Blog'
+  links:
+    - 'mysql:mysql'
+  ports:
+    - '80:80'
+    - '443:443'
+  # volumes:
+  #   - ./code/.htaccess:/var/www/html/.htaccess
+  #   - ./code/wp-content/themes:/var/www/html/wp-content/themes
+  #   - ./code/wp-content/plugins:/var/www/html/wp-content/plugins
+  #   - ./code/wp-content/uploads:/var/www/html/wp-content/uploads
+
+mysql:
+  image: mysql:5.7
+  ports:
+    - '3312:3306'
+  mem_limit: 512m
+  volumes_from:
+    - mysqlvolume
+  environment:
+    MYSQL_DATABASE: wordpress
+    MYSQL_USER: wordpress
+    MYSQL_PASSWORD: changeit
+    MYSQL_ROOT_PASSWORD: changeit
+
+mysqlvolume:
+  image: alpine:3.2
+  command: sleep 2147483647
+  mem_limit: 64m

@@ -1,0 +1,3 @@
+# Docker Base Images
+
+This repo contains the Dockerfiles and configurations for my personal collection of Docker base images. Docker is a great technology, but the trusted images in the public registry are amazingly bloated. These images build off the Alpine 3.2 base image and reduce image size significantly while adding in handy features such as ssl by default, enhanced security, and runtime configuration through environment variables. All images are available as automated builds from the [Docker Public Registry](https://hub.docker.com/r/deardooley/).

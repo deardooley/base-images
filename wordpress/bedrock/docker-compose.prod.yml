@@ -1,0 +1,77 @@
+wordpress:
+  image: deardooley/wordpress:bedrock
+  hostname: docker.example.com
+  environment:
+    DB_NAME: wordpress
+    DB_USER: wordpress
+    DB_PASSWORD: changeit
+    DB_HOST: docker.example.com:3312
+    SMTP_HUB: "smtp.sendgrid.net:587"
+    SMTP_USER: username
+    SMTP_PASSWORD: password
+    SMTP_FROM_ADDRESS: "noreply@docker.example.com"
+    SMTP_TLS: 1
+    SSL_CERT: /ssl/docker.example.com.cer
+    SSL_KEY: /ssl/docker.example.com.key
+    SSL_CA_CERT: /ssl/docker.example.com_ca.cer
+  restart: always
+  ports:
+    - '80:80'
+    - '443:443'
+  volumes:
+     - ./ssl:/ssl:ro
+
+mysql:
+  image: mysql:5.7
+  hostname: docker.example.com
+  restart: always
+  mem_limit: 512m
+  ports:
+    - '3312:3306'
+  volumes_from:
+    - mysqlvolume
+  environment:
+    MYSQL_DATABASE: wordpress
+    MYSQL_USER: wordpress
+    MYSQL_PASSWORD: changeit
+    MYSQL_ROOT_PASSWORD: changeit
+
+mysqlvolume:
+  image: ubuntu
+  command: sleep 2147483647
+  mem_limit: 64m
+
+###############################################################
+#   Sync mysql instances every morning at 2:30am and run
+#   the Wordpress Cron every 5 minutes
+##############################################################
+
+docker-cron:
+  image: sillelien/tutum-cron
+  autorestart: always
+  cpu_shares: 128
+  mem_limit: 64m
+  environment:
+    MYSQLBACKUP_CRON_SCHEDULE: '2 30 * * *'
+    WPCRON_CRON_SCHEDULE: '* */5 * * *'
+  links:
+    - mysqlbackup
+
+wpcron:
+  image: deardooley/cron
+  command: "https://docker.example.com/wp-cron.php"
+
+mysqlbackup:
+ image: sillelien/docker-mysql-backup
+ command: backup
+ environment:
+   - 'MYSQL_HOST=docker.example.com'
+   - 'MYSQL_PORT=3312'
+   - 'MYSQL_USERNAME=wordpress'
+   - 'MYSQL_PASSWORD=changeit'
+   - 'MYSQL_DATABASE=wordpress'
+   - 'AWS_ACCESS_KEY_ID=<iam_access_key>'
+   - 'AWS_SECRET_ACCESS_KEY=<iam_secret_key>'
+   - 'AWS_DEFAULT_REGION=s3-us-west-2'
+   - 'S3_BUCKET=<s3_bucket>'
+   - 'S3_PATH=mysql'
