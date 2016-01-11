@@ -8,7 +8,7 @@
 #
 ######################################################
 
-FROM deardooley/php:5.6-composer
+FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
