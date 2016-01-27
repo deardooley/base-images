@@ -13,8 +13,8 @@ MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x /usr/local/bin/wp && \
-    sed -i 's#%DOCUMENT_ROOT%#/var/www/html/web#g' /etc/apache2/httpd.conf && \
-    sed -i 's#%DOCUMENT_ROOT%#/var/www/html/web#g' /etc/apache2/conf.d/ssl.conf && \
+    sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/httpd.conf && \
+    sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/conf.d/ssl.conf && \
     echo "Checking wordpress cli install..." && \
     wp --info && \
     wp core download && \

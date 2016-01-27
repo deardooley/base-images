@@ -2,8 +2,8 @@
 
 set -e
 
-# sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
-# sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf
+sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
+sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf
 
 # Configure SSL as needed, defaulting to the self-signed cert unless otherwise specified.
 if [[ -n "$SSL_CERT" ]]; then
