@@ -19,23 +19,31 @@ RUN /usr/sbin/deluser apache && \
     adduser -u 1000 -g apache -G apache -S apache && \
     apk --update add apache2-ssl apache2-proxy vim gzip tzdata bash && \
     rm -f /var/cache/apk/* && \
+
     echo "Setting system timezone to America/Chicago..." && \
     ln -snf /usr/share/zoneinfo/America/Chicago /etc/localtime && \
+
     echo "Setting up ntpd..." && \
     echo $(setup-ntp -c busybox  2>&1) && \
     ntpd -d -p pool.ntp.org && \
+
+    echo "Setting document root to DOCUMENT_ROOT..." && \
     mv /var/www/localhost/htdocs /var/www/html && \
     chown -R apache:apache /var/www/html && \
-    echo "Setting document root to DOCUMENT_ROOT..." && \
+
+    # update logging to write
     sed -i 's#/var/www/localhost/htdocs#%DOCUMENT_ROOT%#g' /etc/apache2/httpd.conf && \
-    sed -i 's#LogLevel warn#LogLevel info#g' /etc/apache2/httpd.conf && \
+    #sed -i 's#LogLevel warn#LogLevel info#g' /etc/apache2/httpd.conf && \
     sed -i 's#^ErrorLog logs/error.log#ErrorLog /proc/self/fd/2#g' /etc/apache2/httpd.conf && \
     sed -i 's#^CustomLog logs/access.log combined#CustomLog /proc/self/fd/1 combined#g' /etc/apache2/httpd.conf && \
     sed -i 's#^SSLMutex .*#Mutex sysvsem default#g' /etc/apache2/conf.d/ssl.conf && \
     sed -i 's#^ErrorLog logs/ssl_error.log#ErrorLog /proc/self/fd/2#g' /etc/apache2/conf.d/ssl.conf && \
     sed -i 's#^TransferLog logs/ssl_access.log#TransferLog /proc/self/fd/1#g' /etc/apache2/conf.d/ssl.conf && \
     sed -i 's#^CustomLog logs/ssl_request.log#CustomLog /proc/self/fd/1#g' /etc/apache2/conf.d/ssl.conf && \
-    sed -i 's#LogLevel warn#LogLevel info#g' /etc/apache2/conf.d/ssl.conf
+    #sed -i 's#LogLevel warn#LogLevel info#g' /etc/apache2/conf.d/ssl.conf && \
+
+    # disable SSLv2, SSLv3 by default
+    sed -i 's#^SSLProtocol .*#SSLProtocol all -SSLv2 -SSLv3#g' /etc/apache2/conf.d/ssl.conf
 
 ADD docker_entrypoint.sh /docker_entrypoint.sh
 
