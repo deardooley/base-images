@@ -96,6 +96,19 @@ if [[ -n "${INSTALL_DB}" ]]; then
   wp core install --url="${SITE_URL}"  --title="${SITE_TITLE}" --admin_user="${ADMIN_USER}" --admin_password="${ADMIN_PASSWORD}" --admin_email="${ADMIN_EMAIL}"
 fi
 
+# update wordpress behavior set in the environment
+if (( ( "${DISALLOW_FILE_EDIT}" == "false" ) || ( "${DISALLOW_FILE_EDIT}" == "0" ) )); then
+  sed -i "s#^define('DISALLOW_FILE_EDIT#//define('DISALLOW_FILE_EDIT#" /var/www/html/wp-config.php
+fi
+
+if (( ("${FORCE_SSL_ADMIN}" == "false" ) || ( "${FORCE_SSL_ADMIN}" == "0" ) )); then
+  sed -i "s#^define('FORCE_SSL_ADMIN#//define('FORCE_SSL_ADMIN#" /var/www/html/wp-config.php
+fi
+
+if [[ -n "$TABLE_PREFIX" ]]; then
+  sed -i "s#'wp_'#'"$TABLE_PREFIX"'#" /var/www/html/wp-config.php
+fi
+
 # start ntpd because clock skew is astoundingly real
 ntpd -d -p pool.ntp.org
 
