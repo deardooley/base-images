@@ -2,11 +2,11 @@
 
 # Dynamically set document root at container startup
 if [[ -z "$DOCUMENT_ROOT" ]]; then
-  DOCUMENT_ROOT=/var/www/html
+  export DOCUMENT_ROOT=/var/www/html
 fi
 
 sed -i 's#%DOCUMENT_ROOT%#'$DOCUMENT_ROOT'#g' /etc/apache2/httpd.conf
-#sed -i 's#%DOCUMENT_ROOT%#'$DOCUMENT_ROOT'#g' /etc/apache2/conf.d/ssl.conf
+sed -i 's#%DOCUMENT_ROOT%#'$DOCUMENT_ROOT'#g' /etc/apache2/conf.d/ssl.conf
 
 # sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
 # sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf

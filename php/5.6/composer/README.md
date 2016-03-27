@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/deardooley/php-composer:5.6.svg)](https://imagelayers.io/?images=deardooley/php-composer:5.6 'Get your own badge on imagelayers.io')
+
 ## PHP Base Image
 
 This is a minimal php 5.5 base image with apache2 and composer installed. It has friendly settings for form handling and supports both access and error logging to stdout.

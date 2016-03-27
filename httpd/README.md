@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/deardooley/httpd:2.4.svg)](https://imagelayers.io/?images=deardooley/httpd:2.4 'Get your own badge on imagelayers.io')
+
 # Apache 2.4 Base Image
 
 This is a Minimal apache image with support for dynamic document root definition. Default unified logging to standard out.

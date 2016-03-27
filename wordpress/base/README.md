@@ -1,3 +1,5 @@
+[![](https://badge.imagelayers.io/deardooley/wordpress:vanilla.svg)](https://imagelayers.io/?images=deardooley/wordpress:vanilla 'Get your own badge on imagelayers.io')
+
 # Vanilla Wordpress
 
 This is a minimal wordpress image built off apache2 and composer. The installation can be managed via the
@@ -15,6 +17,14 @@ docker run -h docker.example.com
            -v `pwd`/wp-content:/var/www/html/wp-content \
            wordpress:vanilla
 ```
+
+You may also update several wordpress settings to easier development environments. A list of supported parameters are listed in the following table.
+
+Variable | Type | Description
+----------|----------|----------
+DB_PREFIX | string | The prefix to the tables in your database
+FORCE_SSL_ADMIN | boolean | Whether to force SSL for all access to the wordpress admin area. default: true
+DISALLOW_FILE_EDIT | boolean | Whether the wordpress admin area allows you to edit plugin and theme files. default: true
 
 ### WP-CLI
 You may use the `wp-cli` in the standard way to import images, manage content, etc. A good article on using the `wp-cli` is available from [Smashing Magazine](https://www.smashingmagazine.com/2015/09/wordpress-management-with-wp-cli/).

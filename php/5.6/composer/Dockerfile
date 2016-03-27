@@ -11,4 +11,5 @@
 FROM deardooley/php:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    composer about

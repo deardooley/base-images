@@ -91,8 +91,20 @@ if [[ -n "${INSTALL_WORDPRESS}" ]]; then
   wp core install --url="${SITE_URL}"  --title="${SITE_TITLE}" --admin_user="${ADMIN_USER}" --admin_password="${ADMIN_PASSWORD}" --admin_email="${ADMIN_EMAIL}"
 fi
 
+# update wordpress behavior set in the environment
+if [[ -n "$DISALLOW_FILE_EDIT" ]]; then
+  if (( ( "$DISALLOW_FILE_EDIT" == "false" ) || ( "$DISALLOW_FILE_EDIT" == "0" ) )); then
+    sed -i "s#^define('DISALLOW_FILE_EDIT#//define('DISALLOW_FILE_EDIT#" /var/www/html/config/application.php
+  fi
+fi
+
+if [[ -n "$FORCE_SSL_ADMIN" ]]; then
+  if (( ("$FORCE_SSL_ADMIN" == "false" ) || ( "$FORCE_SSL_ADMIN" == "0" ) )); then
+    sed -i "s#^define('FORCE_SSL_ADMIN#//define('FORCE_SSL_ADMIN#" /var/www/html/config/application.php
+  fi
+fi
 # start ntpd because clock skew is astoundingly real
-ntpd -d -p pool.ntp.org
+ntpd -d -p pool.ntp.org &
 
 # finally, run the command passed into the container
 exec "$@"

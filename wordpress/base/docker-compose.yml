@@ -33,15 +33,15 @@ mysql:
   ports:
     - '3312:3306'
   mem_limit: 512m
-  volumes_from:
-    - mysqlvolume
+#  volumes_from:
+#    - mysqlvolume
   environment:
     MYSQL_DATABASE: wordpress
     MYSQL_USER: wordpress
     MYSQL_PASSWORD: changeit
     MYSQL_ROOT_PASSWORD: changeit
 
-mysqlvolume:
-  image: alpine:3.2
-  command: sleep 2147483647
-  mem_limit: 64m
+#mysqlvolume:
+#  image: alpine:3.2
+#  command: sleep 2147483647
+#  mem_limit: 64m

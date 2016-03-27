@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set +e
 
 sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
 sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf
@@ -97,20 +97,24 @@ if [[ -n "${INSTALL_DB}" ]]; then
 fi
 
 # update wordpress behavior set in the environment
-if (( ( "${DISALLOW_FILE_EDIT}" == "false" ) || ( "${DISALLOW_FILE_EDIT}" == "0" ) )); then
-  sed -i "s#^define('DISALLOW_FILE_EDIT#//define('DISALLOW_FILE_EDIT#" /var/www/html/wp-config.php
+if [[ -n "$DISALLOW_FILE_EDIT" ]]; then
+  if (( ( "$DISALLOW_FILE_EDIT" == "false" ) || ( "$DISALLOW_FILE_EDIT" == "0" ) )); then
+    sed -i "s#^define('DISALLOW_FILE_EDIT#//define('DISALLOW_FILE_EDIT#" /var/www/html/wp-config.php
+  fi
 fi
 
-if (( ("${FORCE_SSL_ADMIN}" == "false" ) || ( "${FORCE_SSL_ADMIN}" == "0" ) )); then
-  sed -i "s#^define('FORCE_SSL_ADMIN#//define('FORCE_SSL_ADMIN#" /var/www/html/wp-config.php
+if [[ -n "$FORCE_SSL_ADMIN" ]]; then
+  if (( ("$FORCE_SSL_ADMIN" == "false" ) || ( "$FORCE_SSL_ADMIN" == "0" ) )); then
+    sed -i "s#^define('FORCE_SSL_ADMIN#//define('FORCE_SSL_ADMIN#" /var/www/html/wp-config.php
+  fi
 fi
 
-if [[ -n "$TABLE_PREFIX" ]]; then
-  sed -i "s#'wp_'#'"$TABLE_PREFIX"'#" /var/www/html/wp-config.php
+if [[ -n "$DB_PREFIX" ]]; then
+  sed -i "s#'wp_'#'"$DB_PREFIX"'#" /var/www/html/wp-config.php
 fi
 
 # start ntpd because clock skew is astoundingly real
-ntpd -d -p pool.ntp.org
+ntpd -d -p pool.ntp.org &
 
 # finally, run the command passed into the container
 exec "$@"

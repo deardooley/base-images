@@ -11,10 +11,24 @@
 FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
-RUN curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+RUN echo "Installing opcache..." && \
+    apk --update del php-pdo_mysql php-mysqli && \
+    apk --update add php-opcache php-mysqli && \
+        rm -f /var/cache/apk/* && \
+        { \
+        echo 'opcache.memory_consumption=128'; \
+        echo 'opcache.interned_strings_buffer=8'; \
+        echo 'opcache.max_accelerated_files=4000'; \
+        echo 'opcache.revalidate_freq=60'; \
+        echo 'opcache.fast_shutdown=1'; \
+        echo 'opcache.enable_cli=1'; \
+        } > /etc/php/conf.d/opcache-recommended.ini && \
+
+    curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x /usr/local/bin/wp && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/httpd.conf && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/conf.d/ssl.conf && \
+
     echo "Checking wordpress cli install..." && \
     wp --info && \
     wp core download && \
