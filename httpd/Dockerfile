@@ -8,7 +8,7 @@
 #
 ######################################################
 
-FROM alpine:edge
+FROM gliderlabs/alpine:3.4
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 ADD tcp/limits.conf /etc/security/limits.conf
@@ -26,6 +26,7 @@ RUN apk --update add openssl apache2 vim gzip tzdata bash && \
 
     echo "Updating default apache DocumentRoot..." && \
     mv /var/www/localhost/htdocs /var/www/html && \
+    addgroup -S apache && \
     chown -R apache:apache /var/www/html && \
     sed -i 's#/var/www/localhost/htdocs#%DOCUMENT_ROOT%#g' /etc/apache2/httpd.conf && \
     sed -i 's/^    AllowOverride None/    AllowOverride All/' /etc/apache2/httpd.conf && \

@@ -12,9 +12,8 @@ FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN echo "Installing opcache..." && \
-    apk --update del php-pdo_mysql php-mysqli && \
-    apk --update add php-opcache php-mysqli && \
-        rm -f /var/cache/apk/* && \
+    apk --update add php5-opcache php5-mysqli && \
+    rm -f /var/cache/apk/* && \
         { \
         echo 'opcache.memory_consumption=128'; \
         echo 'opcache.interned_strings_buffer=8'; \
@@ -22,7 +21,7 @@ RUN echo "Installing opcache..." && \
         echo 'opcache.revalidate_freq=60'; \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
-        } > /etc/php/conf.d/opcache-recommended.ini && \
+        } > /etc/php5/conf.d/opcache-recommended.ini && \
 
     curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x /usr/local/bin/wp && \

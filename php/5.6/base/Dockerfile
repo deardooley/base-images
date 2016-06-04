@@ -10,7 +10,7 @@
 FROM deardooley/httpd:2.4
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
-RUN apk --update add curl zip php-apache2 php-cli php-json php-phar php-openssl php-mysql php-pdo php-zip php-ctype php-curl php-mysqli php-gd php-iconv php-zlib php-xml php-dom php-mcrypt php-pdo_mysql ssmtp && \
+RUN apk --update add curl zip php5-apache2 php5-cli php5-json php5-phar php5-openssl php5-mysql php5-pdo php5-zip php5-ctype php5-curl php5-mysqli php5-gd php5-iconv php5-zlib php5-xml php5-dom php5-mcrypt php5-pdo_mysql ssmtp && \
     rm -f /var/cache/apk/* && \
     echo "<?php phpinfo(); ?>" > /var/www/html/index.php && \
     chown -R apache:apache /var/www/html && \

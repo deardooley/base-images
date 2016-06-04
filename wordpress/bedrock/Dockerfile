@@ -13,8 +13,7 @@ FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN echo "Installing opcache..." && \
-    apk --update del php-pdo_mysql php-mysqli && \
-    apk --update add php-opcache php-mysqli git && \
+    apk --update add php5-opcache php5-mysqli git && \
         rm -f /var/cache/apk/* && \
         { \
         echo 'opcache.memory_consumption=128'; \
@@ -23,7 +22,7 @@ RUN echo "Installing opcache..." && \
         echo 'opcache.revalidate_freq=60'; \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
-        } > /etc/php/conf.d/opcache-recommended.ini && \
+        } > /etc/php5/conf.d/opcache-recommended.ini && \
 
     echo "Updating document root for bedrock..." && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html/web#g' /etc/apache2/httpd.conf && \

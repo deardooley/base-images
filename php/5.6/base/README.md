@@ -20,7 +20,7 @@ docker run -h docker.example.com
            -v `pwd`:/var/www/html \
            --link mysql:mysql
            -e DOCUMENT_ROOT=/var/www/html
-           deardooley/php:5.5
+           deardooley/php:5.6
 ```
 
 Alternatively, you can specify a different web root if needed by your application. For example, if you had a Laravel project where the project `composer.json` file was located at `/usr/local/src/laravel/composer.json`, the following would start the container with the proper web root for the project.
@@ -32,7 +32,7 @@ docker run -h docker.example.com
            -v /usr/local/src/laravel:/var/www \
            --link mysql:mysql
            -e DOCUMENT_ROOT=/var/www/public
-           deardooley/php:5.5
+           deardooley/php:5.6
 ```
 
 ### Running in production
@@ -44,7 +44,7 @@ docker run -h docker.example.com \
            -p 80:80 \
            -p 443:443 \
            --name apache \
-           deardooley/php:5.5
+           deardooley/php:5.6
 
 docker logs apache
 ```
@@ -62,7 +62,7 @@ docker run -h docker.example.com \
            -e SSL_CERT=/ssl/docker_example_com_cert.cer \
            -e SSL_KEY=/ssl/docker.example.com.key \
            -e SSL_CA_CERT=/ssl/docker_example_com.cer \
-           deardooley/php:5.5
+           deardooley/php:5.6
 ```
 
 ### Email Server
@@ -91,5 +91,5 @@ docker run -h docker.example.com \
            -e SSL_CERT=/ssl/docker_example_com_cert.cer \
            -e SSL_KEY=/ssl/docker.example.com.key \
            -e SSL_CA_CERT=/ssl/docker_example_com.cer \
-           deardooley/php:5.5
+           deardooley/php:5.6
 ```
