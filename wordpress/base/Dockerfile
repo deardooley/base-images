@@ -29,6 +29,10 @@ RUN echo "Installing opcache..." && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/httpd.conf && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/conf.d/ssl.conf && \
 
+    # Updating apache defaults for php
+    sed -i 's#DirectoryIndex index.html#DirectoryIndex index.php index.html#' /etc/apache2/httpd.conf && \
+    rm -f /var/www/html/index.html && \
+
     echo "Checking wordpress cli install..." && \
     wp --info && \
     wp core download && \

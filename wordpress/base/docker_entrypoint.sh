@@ -109,8 +109,8 @@ if [[ -n "$FORCE_SSL_ADMIN" ]]; then
   fi
 fi
 
-if [[ -n "$DB_PREFIX" ]]; then
-  sed -i "s#'wp_'#'"$DB_PREFIX"'#" /var/www/html/wp-config.php
+if [[ -n "$TABLE_PREFIX" ]]; then
+  sed -i "s#'wp_'#'"$TABLE_PREFIX"'#" /var/www/html/wp-config.php
 fi
 
 # start ntpd because clock skew is astoundingly real
