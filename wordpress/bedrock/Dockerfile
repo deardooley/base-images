@@ -23,7 +23,7 @@ RUN echo "Installing opcache..." && \
         echo 'opcache.fast_shutdown=1'; \
         echo 'opcache.enable_cli=1'; \
         } > /etc/php5/conf.d/opcache-recommended.ini && \
-
+    
     echo "Updating document root for bedrock..." && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html/web#g' /etc/apache2/httpd.conf && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html/web#g' /etc/apache2/conf.d/ssl.conf && \

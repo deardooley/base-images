@@ -28,13 +28,9 @@ RUN echo "Installing opcache..." && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/httpd.conf && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/conf.d/ssl.conf && \
 
-    # Updating apache defaults for php
-    sed -i 's#DirectoryIndex index.html#DirectoryIndex index.php index.html#' /etc/apache2/httpd.conf && \
-    rm -f /var/www/html/index.html && \
-
     echo "Checking wordpress cli install..." && \
-    wp --info && \
-    wp core download && \
+    wp --info --allow-root && \
+    wp --allow-root core download && \
     { \
       echo "define('WP_DEBUG', true);"; \
       echo "define('WP_DEBUG_DISPLAY', false );"; \
@@ -49,7 +45,7 @@ RUN echo "Installing opcache..." && \
       echo "    define('SENDGRID_'.\$sgvar, \$_ENV['SENDGRID_'.\$sgvar]); "; \
       echo "  }"; \
       echo "}"; \
-    } | wp core config --dbname='%%DB_NAME%%' --dbuser='%%DB_USER%%' --dbpass='%%DB_PASS%%' --dbhost='%%DB_HOST%%' --skip-check --extra-php && \
+    } | wp --allow-root core config --dbname='%%DB_NAME%%' --dbuser='%%DB_USER%%' --dbpass='%%DB_PASS%%' --dbhost='%%DB_HOST%%' --skip-check --extra-php && \
     chown -R apache:apache /var/www/html/*
 
 ADD docker_entrypoint.sh /docker_entrypoint.sh
