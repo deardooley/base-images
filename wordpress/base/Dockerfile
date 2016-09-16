@@ -28,16 +28,32 @@ RUN echo "Installing opcache..." && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/httpd.conf && \
     sed -i 's#%DOCUMENT_ROOT%#/var/www/html#g' /etc/apache2/conf.d/ssl.conf && \
 
+    sed -i 's/^#LoadModule deflate_module/LoadModule deflate_module/g' /etc/apache2/httpd.conf && \
+    sed -i 's/^#LoadModule expires_module/LoadModule expires_module/g' /etc/apache2/httpd.conf && \
+
     echo "Checking wordpress cli install..." && \
     wp --info --allow-root && \
     wp --allow-root core download && \
     { \
+      echo "foreach(\$_ENV as \$_ekey=>\$_eval) {";\
+      echo "  if (strpos(\$_ekey, 'WP_REDIS_') === 0) {";\
+      echo "    define(\$_ekey, \$_eval);"; \
+      echo "  }"; \
+      echo "}"; \
+      echo "if (isset(\$_ENV['WP_CACHE_KEY_SALT'])) {"; \
+      echo "  define('WP_CACHE_KEY_SALT', \$_ENV['WP_CACHE_KEY_SALT']);"; \
+      echo "}"; \
+      echo "define('WP_MEMORY_LIMIT', '256M');"; \
+      echo "define('WP_MAX_MEMORY_LIMIT', '256M');"; \
       echo "define('WP_DEBUG', true);"; \
       echo "define('WP_DEBUG_DISPLAY', false );"; \
       echo "define('SAVEQUERIES', true);"; \
       echo "define('SCRIPT_DEBUG', true);"; \
       echo "define('DISALLOW_FILE_EDIT', true);"; \
       echo "define('FORCE_SSL_ADMIN', true);"; \
+      echo "define('WP_HTTP_BLOCK_EXTERNAL', false);"; \
+      echo "define('WP_ACCESSIBLE_HOSTS', '*');"; \
+      echo "define('DISABLE_WP_CRON', false);"; \
       echo "if (\$_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') \$_SERVER['HTTPS']='on';"; \
       echo "\$sgenv = array('USERNAME','PASSWORD','API_KEY','SEND_METHOD','FROM_NAME','FROM_EMAIL','REPLY_TO','CATEGORIES','TEMPLATE');"; \
       echo "foreach(\$sgenv as \$sgvar) { "; \

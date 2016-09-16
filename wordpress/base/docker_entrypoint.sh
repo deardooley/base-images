@@ -2,8 +2,9 @@
 
 set +e
 
-sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
-sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf
+# Update hostname in httpd.conf and ssl.conf files so we get a clean startup
+sed -i 's#%HOSTNAME%#'$(hostname)'#g' /etc/apache2/httpd.conf
+sed -i 's#%HOSTNAME%#'$(hostname)'#g' /etc/apache2/conf.d/ssl.conf
 
 # Configure SSL as needed, defaulting to the self-signed cert unless otherwise specified.
 if [[ -n "$SSL_CERT" ]]; then
@@ -91,7 +92,7 @@ if [[ -n "${INSTALL_DB}" ]]; then
   [[ ( -z "${ADMIN_PASSWORD}" ) ]] && ADMIN_PASSWORD=admin
   [[ ( -z "${ADMIN_EMAIL}" ) ]] && ADMIN_EMAIL="admin@example.com"
   [[ ( -z "${SITE_TITLE}" ) ]] && SITE_TITLE="Another Wordpress Blog"
-  [[ ( -z "${SITE_URL}" ) ]] && SITE_URL=$HOSTNAME
+  [[ ( -z "${SITE_URL}" ) ]] && SITE_URL=$(hostname)
 
   wp core install --url="${SITE_URL}"  --title="${SITE_TITLE}" --admin_user="${ADMIN_USER}" --admin_password="${ADMIN_PASSWORD}" --admin_email="${ADMIN_EMAIL}"
 fi
@@ -99,18 +100,51 @@ fi
 # update wordpress behavior set in the environment
 if [[ -n "$DISALLOW_FILE_EDIT" ]]; then
   if (( ( "$DISALLOW_FILE_EDIT" == "false" ) || ( "$DISALLOW_FILE_EDIT" == "0" ) )); then
-    sed -i "s#^define('DISALLOW_FILE_EDIT#//define('DISALLOW_FILE_EDIT#" /var/www/html/wp-config.php
+    sed -i "s#^define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', false);#" /var/www/html/wp-config.php
+  else
+    sed -i "s#^define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', true);#" /var/www/html/wp-config.php
   fi
 fi
 
 if [[ -n "$FORCE_SSL_ADMIN" ]]; then
   if (( ("$FORCE_SSL_ADMIN" == "false" ) || ( "$FORCE_SSL_ADMIN" == "0" ) )); then
-    sed -i "s#^define('FORCE_SSL_ADMIN#//define('FORCE_SSL_ADMIN#" /var/www/html/wp-config.php
+    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN, false);#" /var/www/html/wp-config.php
+  else
+    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN, true);#" /var/www/html/wp-config.php
+  fi
+fi
+
+if [[ -n "$WP_ACCESSIBLE_HOSTS" ]]; then
+  sed -i "s#^define('WP_ACCESSIBLE_HOSTS',.*#define('WP_ACCESSIBLE_HOSTS', '"$WP_ACCESSIBLE_HOSTS"');#" /var/www/html/wp-config.php
+fi
+
+if [[ -n "$WP_HTTP_BLOCK_EXTERNAL" ]]; then
+  if (( ("$WP_HTTP_BLOCK_EXTERNAL" == "false" ) || ( "$WP_HTTP_BLOCK_EXTERNAL" == "0" ) )); then
+    sed -i "s#^define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', false);#" /var/www/html/wp-config.php
+  else
+    sed -i "s#^//define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', true);#" /var/www/html/wp-config.php
+  fi
+fi
+
+if [[ -n "$DISABLE_WP_CRON" ]]; then
+  if (( ("$DISABLE_WP_CRON" == "false" ) || ( "$DISABLE_WP_CRON" == "0" ) )); then
+    sed -i "s#^define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', false);#" /var/www/html/wp-config.php
+  else
+    sed -i "s#^//define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', true);#" /var/www/html/wp-config.php
   fi
 fi
 
 if [[ -n "$TABLE_PREFIX" ]]; then
   sed -i "s#'wp_'#'"$TABLE_PREFIX"'#" /var/www/html/wp-config.php
+fi
+
+# Parse user-supplied limits on upload sizes
+if [[ -n "$UPLOAD_MAX_FILESIZE" ]]; then
+  sed -i 's#^upload_max_filesize .*#upload_max_filesize = '$UPLOAD_MAX_FILESIZE'#' /etc/php5/php.ini
+fi
+
+if [[ -n "$POST_MAX_SIZE" ]]; then
+  sed -i 's#^post_max_size .*#post_max_size = '$POST_MAX_SIZE'#' /etc/php5/php.ini
 fi
 
 # start ntpd because clock skew is astoundingly real

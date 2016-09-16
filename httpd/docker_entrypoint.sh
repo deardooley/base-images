@@ -8,8 +8,9 @@ fi
 sed -i 's#%DOCUMENT_ROOT%#'$DOCUMENT_ROOT'#g' /etc/apache2/httpd.conf
 sed -i 's#%DOCUMENT_ROOT%#'$DOCUMENT_ROOT'#g' /etc/apache2/conf.d/ssl.conf
 
-# sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/httpd.conf
-# sed -i 's#%HOSTNAME%#'$HOSTNAME'#g' /etc/apache2/conf.d/ssl.conf
+# Update hostname in httpd.conf and ssl.conf files so we get a clean startup
+sed -i 's#%HOSTNAME%#'$(hostname)'#g' /etc/apache2/httpd.conf
+sed -i 's#%HOSTNAME%#'$(hostname)'#g' /etc/apache2/conf.d/ssl.conf
 
 # Configure SSL as needed, defaulting to the self-signed cert unless otherwise specified.
 if [[ -n "$SSL_CERT" ]]; then

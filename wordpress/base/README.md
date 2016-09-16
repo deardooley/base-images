@@ -20,11 +20,20 @@ docker run -h docker.example.com
 
 You may also update several wordpress settings to easier development environments. A list of supported parameters are listed in the following table.
 
-Variable | Type | Description
-----------|----------|----------
-DB_PREFIX | string | The prefix to the tables in your database
-FORCE_SSL_ADMIN | boolean | Whether to force SSL for all access to the wordpress admin area. default: true
-DISALLOW_FILE_EDIT | boolean | Whether the wordpress admin area allows you to edit plugin and theme files. default: true
+| Variable | Type | Description|
+|----------|----------|----------|
+|DB_PREFIX | string | The prefix to the tables in your database |
+|FORCE_SSL_ADMIN | boolean | Whether to force SSL for all access to the wordpress admin area. default: true |
+|DISALLOW_FILE_EDIT | boolean | Whether the wordpress admin area allows you to edit plugin and theme files. default: true |
+| WP_MEMORY_LIMIT | string | The max memory available for front-end requests. In ([\d]+[M|G]{1}B) format |
+| WP_MAX_MEMORY_LIMIT | string | The max memory available for admin requests. In ([\d]+[M|G]{1}B) format |
+| WP_DEBUG | boolean | Whether to enable wordpress debug. default: true |
+| WP_DEBUG_DISPLAY | boolean | Whether to print debug warnings. default: false |
+| SAVEQUERIES | boolean | Whether to store the DB queries for debug analysis. default: true |
+| SCRIPT_DEBUG | boolean | Whether to serve uncompressed javascript and css. default: true |
+| WP_HTTP_BLOCK_EXTERNAL | boolean | Whether to disable all HTTP requests to external sites. default true |
+| WP_ACCESSIBLE_HOSTS | string:csv | List of hostnames and/or ip addresses to enable remote calls to when `WP_HTTP_BLOCK_EXTERNAL=true` default: * |
+
 
 ### WP-CLI
 You may use the `wp-cli` in the standard way to import images, manage content, etc. A good article on using the `wp-cli` is available from [Smashing Magazine](https://www.smashingmagazine.com/2015/09/wordpress-management-with-wp-cli/).
@@ -52,7 +61,30 @@ docker run -h docker.example.com \
 
 ### WP-Cron and scheduled tasks
 
-There is no unix cron daemon available in the container. In order to ensure your Wordpress cron tasks run on schedule, you should make use of an external cron solution. There are plenty of web-based cron services available. Alternatively, you can use the `deardooley/cron` Docker image to query your site. The `docker-compose.yml` file included with this repository has an example cron solution.  
+There is no unix cron daemon available in the container. In order to ensure your Wordpress cron tasks run on schedule, you should make use of an external cron solution. There are plenty of web-based cron services available. Alternatively, you can use the `deardooley/curl` Docker image to query your site. The `docker-compose.yml` file included with this repository has an example cron solution.  
+
+By default, the Wordpress cron will be checked any time a page is requested. This can cause performance issues in production environments and drastically slow down development cycles. You can force Wordpress cron to only run when a GET reqeust is made to `http://<hostname>/wp-cron.php` by setting the `DISABLE_WP_CRON` environment variable to `false` when starting your container.
+
+| Variable | Type | Description|
+|----------|----------|----------|
+| DISABLE_WP_CRON | boolean | Whether to disable the wordpress cron. If true, cron will still be enabled, but you will need to manually trigger the `wp-cron.php` script for it to run. default:false |
+
+> To reliably implement cron, use a third party service such as the host crontab, or [Pingdom](https://pingdom.com). All that is needed is a HTTP GET request to `http://<hostname>/wp-cron.php`.
+
+
+### Object Cache
+
+Your object cache or lack thereof will have a dramatic impact on the speed of your admin panel. This image supports runtime configuration of the [Redis Object Cache](http://wordpress.org/extend/plugins/redis-cache) plugin, a persistent object cache backend powered by Redis. All of the standard [connection parameters](http://wordpress.org/extend/plugins/redis-cache/other_notes/) from the plugin are supported as environment variables in this image. 
+
+In order to use the cache, you will need to have access to a Redis database. The `docker-compose.yml` file in this repository will spin one up for you by default. The most common configuration options are listed below. The only one you need for the The `docker-compose.yml` file provided is `WP_REDIS_HOST`.
+
+| Variable | Type | Description|
+|----------|----------|----------|
+| WP_REDIS_HOST | string | Hostname to the redis db. default: localhost |
+| WP_REDIS_PORT | integer | Port to the redis db. default: 6379 |
+| WP_REDIS_DATABASE | integer | The redis DB to use. default: 0 |
+| WP_REDIS_PASSWORD | string | The password with which to authenticate to redis. default: null |
+
 
 ### SSL support
 

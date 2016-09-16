@@ -15,13 +15,13 @@ wordpress:
     ADMIN_EMAIL: "admin@example.com"
     ADMIN_USER: admin
     ADMIN_PASSWORD: admin
-    SITE_URL: docker.example.com
+    SITE_URL: docker.example.com:9080
     SITE_TITLE: 'Another Wordpress Blog'
   links:
     - 'mysql:mysql'
   ports:
-    - '80:80'
-    - '443:443'
+    - '9080:80'
+    - '9543:443'
   # volumes:
   #   - ./code/.htaccess:/var/www/html/.htaccess
   #   - ./code/wp-content/themes:/var/www/html/wp-content/themes
