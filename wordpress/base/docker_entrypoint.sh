@@ -108,9 +108,9 @@ fi
 
 if [[ -n "$FORCE_SSL_ADMIN" ]]; then
   if (( ("$FORCE_SSL_ADMIN" == "false" ) || ( "$FORCE_SSL_ADMIN" == "0" ) )); then
-    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN, false);#" /var/www/html/wp-config.php
+    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN, true);#" /var/www/html/wp-config.php
+    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', true);#" /var/www/html/wp-config.php
   fi
 fi
 
