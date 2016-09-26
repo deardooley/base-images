@@ -134,6 +134,22 @@ if [[ -n "$DISABLE_WP_CRON" ]]; then
   fi
 fi
 
+if [[ -n "$WP_REDIS_HOST" ]]; then
+  sed -i "s#^define('WP_REDIS_HOST',.*#define('WP_REDIS_HOST', '"$WP_REDIS_HOST"');#" /var/www/html/wp-config.php
+fi
+
+if [[ -n "$WP_REDIS_DATABASE" ]]; then
+  sed -i "s#^define('WP_REDIS_DATABASE',.*#define('WP_REDIS_DATABASE', '"$WP_REDIS_DATABASE"');#" /var/www/html/wp-config.php
+fi
+
+if [[ -n "$WP_REDIS_PORT" ]]; then
+  sed -i "s#^define('WP_REDIS_PORT',.*#define('WP_REDIS_PORT', "$WP_REDIS_PORT");#" /var/www/html/wp-config.php
+fi
+
+if [[ -n "$WP_REDIS_PASSWORD" ]]; then
+  sed -i "s#^define('WP_REDIS_PASSWORD',.*#define('WP_REDIS_PASSWORD', '"$WP_REDIS_PASSWORD"');#" /var/www/html/wp-config.php
+fi
+
 if [[ -n "$TABLE_PREFIX" ]]; then
   sed -i "s#'wp_'#'"$TABLE_PREFIX"'#" /var/www/html/wp-config.php
 fi
