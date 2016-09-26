@@ -12,7 +12,7 @@ FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN echo "Installing opcache..." && \
-    apk --update add php5-opcache php5-mysqli && \
+    apk --update add php5-opcache php5-mysqli php5-redis@testing && \
     rm -f /var/cache/apk/* && \
         { \
         echo 'opcache.memory_consumption=128'; \
@@ -20,7 +20,7 @@ RUN echo "Installing opcache..." && \
         echo 'opcache.max_accelerated_files=4000'; \
         echo 'opcache.revalidate_freq=60'; \
         echo 'opcache.fast_shutdown=1'; \
-        echo 'opcache.enable_cli=1'; \
+        echo 'opcache.enable_cli=0'; \
         } > /etc/php5/conf.d/opcache-recommended.ini && \
 
     curl -sS -o /usr/local/bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
@@ -38,10 +38,12 @@ RUN echo "Installing opcache..." && \
     wp --info --allow-root && \
     wp --allow-root core download && \
     { \
-      echo "define('WP_CACHE_KEY_SALT', '');"; \
-      echo "define('WP_REDIS_HOST', 'redis');"; \
-      echo "define('WP_REDIS_PORT', 6379);"; \
-      echo "define('WP_REDIS_DATABASE', '22');"; \
+      echo "\$redis_server = array("; \
+      echo "  'host'     => '%WP_REDIS_HOST%',"; \
+      echo "  'port'     => %WP_REDIS_PORT%,"; \
+      echo "  'auth'     => '%WP_REDIS_PASSWORD%',"; \
+      echo "  'database' => %WP_REDIS_DATABASE%, // Optionally use a specific numeric Redis database. Default is 0."; \
+      echo ");"; \
       echo "define('WP_MEMORY_LIMIT', '256M');"; \
       echo "define('WP_MAX_MEMORY_LIMIT', '256M');"; \
       echo "define('WP_DEBUG', true);"; \
