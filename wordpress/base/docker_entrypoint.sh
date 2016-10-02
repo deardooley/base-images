@@ -122,7 +122,7 @@ if [[ -n "$WP_HTTP_BLOCK_EXTERNAL" ]]; then
   if (( ("$WP_HTTP_BLOCK_EXTERNAL" == "false" ) || ( "$WP_HTTP_BLOCK_EXTERNAL" == "0" ) )); then
     sed -i "s#^define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^//define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', true);#" /var/www/html/wp-config.php
+    sed -i "s#^define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', true);#" /var/www/html/wp-config.php
   fi
 fi
 
@@ -130,7 +130,7 @@ if [[ -n "$DISABLE_WP_CRON" ]]; then
   if (( ("$DISABLE_WP_CRON" == "false" ) || ( "$DISABLE_WP_CRON" == "0" ) )); then
     sed -i "s#^define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^//define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', true);#" /var/www/html/wp-config.php
+    sed -i "s#^define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', true);#" /var/www/html/wp-config.php
   fi
 fi
 
