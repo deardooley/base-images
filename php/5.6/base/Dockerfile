@@ -10,8 +10,7 @@
 FROM deardooley/httpd:2.4
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
-RUN echo http://alpine.gliderlabs.com/alpine/edge/main >> /etc/apk/repositories && \
-    echo http://alpine.gliderlabs.com/alpine/edge/community >> /etc/apk/repositories && \
+RUN echo http://alpine.gliderlabs.com/alpine/edge/community >> /etc/apk/repositories && \
     apk-install curl zip php5-apache2 php5-cli php5-curl php5-gd php5-json php5-phar php5-openssl php5-mysql php5-pdo php5-zip php5-ctype php5-mysqli php5-iconv php5-zlib php5-xml php5-dom php5-mcrypt php5-pdo_mysql php5-pcntl php5-posix  ssmtp
 
 RUN    apk-install shadow --repository http://dl-3.alpinelinux.org/alpine/edge/testing/ --allow-untrusted && \
