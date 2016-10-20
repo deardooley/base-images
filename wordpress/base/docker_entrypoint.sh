@@ -99,38 +99,38 @@ fi
 
 # update wordpress behavior set in the environment
 if [[ -n "$DISALLOW_FILE_EDIT" ]]; then
-  if (( ( "$DISALLOW_FILE_EDIT" == "false" ) || ( "$DISALLOW_FILE_EDIT" == "0" ) )); then
-    sed -i "s#^define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', false);#" /var/www/html/wp-config.php
+  if [[ "$DISALLOW_FILE_EDIT" == "false" ]] || [[ "$DISALLOW_FILE_EDIT" == "0" ]]; then
+    sed -i "s#define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', true);#" /var/www/html/wp-config.php
+    sed -i "s#define('DISALLOW_FILE_EDIT',.*#define('DISALLOW_FILE_EDIT', true);#" /var/www/html/wp-config.php
   fi
 fi
 
 if [[ -n "$FORCE_SSL_ADMIN" ]]; then
-  if (( ("$FORCE_SSL_ADMIN" == "false" ) || ( "$FORCE_SSL_ADMIN" == "0" ) )); then
-    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', false);#" /var/www/html/wp-config.php
+  if [[ "$FORCE_SSL_ADMIN" == "false" ]] || [[ "$FORCE_SSL_ADMIN" == "0" ]]; then
+    sed -i "s#define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', true);#" /var/www/html/wp-config.php
+    sed -i "s#define('FORCE_SSL_ADMIN',.*#define('FORCE_SSL_ADMIN', true);#" /var/www/html/wp-config.php
   fi
 fi
 
 if [[ -n "$WP_ACCESSIBLE_HOSTS" ]]; then
-  sed -i "s#^define('WP_ACCESSIBLE_HOSTS',.*#define('WP_ACCESSIBLE_HOSTS', '"$WP_ACCESSIBLE_HOSTS"');#" /var/www/html/wp-config.php
+  sed -i "s#define('WP_ACCESSIBLE_HOSTS',.*#define('WP_ACCESSIBLE_HOSTS', '"$WP_ACCESSIBLE_HOSTS"');#" /var/www/html/wp-config.php
 fi
 
 if [[ -n "$WP_HTTP_BLOCK_EXTERNAL" ]]; then
-  if (( ("$WP_HTTP_BLOCK_EXTERNAL" == "false" ) || ( "$WP_HTTP_BLOCK_EXTERNAL" == "0" ) )); then
-    sed -i "s#^define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', false);#" /var/www/html/wp-config.php
+  if [[ "$WP_HTTP_BLOCK_EXTERNAL" == "false" ]] || [[ "$WP_HTTP_BLOCK_EXTERNAL" == "0" ]]; then
+    sed -i "s#define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', true);#" /var/www/html/wp-config.php
+    sed -i "s#define('WP_HTTP_BLOCK_EXTERNAL',.*#define('WP_HTTP_BLOCK_EXTERNAL', true);#" /var/www/html/wp-config.php
   fi
 fi
 
 if [[ -n "$DISABLE_WP_CRON" ]]; then
-  if (( ("$DISABLE_WP_CRON" == "false" ) || ( "$DISABLE_WP_CRON" == "0" ) )); then
-    sed -i "s#^define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', false);#" /var/www/html/wp-config.php
+  if [[ "$DISABLE_WP_CRON" == "false" ]] || [[ "$DISABLE_WP_CRON" == "0" ]]; then
+    sed -i "s#define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', false);#" /var/www/html/wp-config.php
   else
-    sed -i "s#^define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', true);#" /var/www/html/wp-config.php
+    sed -i "s#define('DISABLE_WP_CRON',.*#define('DISABLE_WP_CRON', true);#" /var/www/html/wp-config.php
   fi
 fi
 
@@ -160,11 +160,11 @@ fi
 
 # Parse user-supplied limits on upload sizes
 if [[ -n "$UPLOAD_MAX_FILESIZE" ]]; then
-  sed -i 's#^upload_max_filesize .*#upload_max_filesize = '$UPLOAD_MAX_FILESIZE'#' /etc/php5/php.ini
+  sed -i 's#upload_max_filesize .*#upload_max_filesize = '$UPLOAD_MAX_FILESIZE'#' /etc/php5/php.ini
 fi
 
 if [[ -n "$POST_MAX_SIZE" ]]; then
-  sed -i 's#^post_max_size .*#post_max_size = '$POST_MAX_SIZE'#' /etc/php5/php.ini
+  sed -i 's#post_max_size .*#post_max_size = '$POST_MAX_SIZE'#' /etc/php5/php.ini
 fi
 
 # start ntpd because clock skew is astoundingly real
