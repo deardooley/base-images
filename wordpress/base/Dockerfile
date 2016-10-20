@@ -12,7 +12,7 @@ FROM deardooley/php-composer:5.6
 MAINTAINER Rion Dooley <dooley@tacc.utexas.edu
 
 RUN echo "Installing opcache..." && \
-    apk --update add php5-opcache php5-mysqli php5-redis@testing && \
+    apk --update add php5-opcache php5-mysqli && \
     rm -f /var/cache/apk/* && \
         { \
         echo 'opcache.memory_consumption=128'; \
